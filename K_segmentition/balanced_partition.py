@@ -1,6 +1,6 @@
 from matplotlib import pyplot as plt
 import numpy as np
-from One_Segment_Coreset import One_Segment_Coreset
+from one_segment_class import One_Segment
 from optimal_bicriteria import optimal_bicriteria_points
 from rectangle_problem.point_in_rectangle import distances
 
@@ -14,29 +14,17 @@ def balanced_partition(points, Sigma):
     # set values for 1-segment corset
     D = []
     Q = []
-    Sx = 0
-    Sxx = 0
-    Sxxx = 0
-    Sxxxx = 0
-    Sy = 0
-    Syy = 0
-    Sxy = 0
-    Sxxy = 0
+    one_segment = One_Segment(0,0,0,0,0,0,0,0)
     for i in range(len(points)):
         
         # each itereion we update values the new 1-segment corset with the new point added
         Q.append(points[i])
-        Sx += x_coordinates[i]
-        Sxx += x_coordinates[i] ** 2
-        Sxxx += x_coordinates[i] ** 3
-        Sxxxx += x_coordinates[i] ** 4
-        Sy += y_coordinates[i]
-        Syy += y_coordinates[i] ** 2
-        Sxy += x_coordinates[i] * y_coordinates[i]
-        Sxxy += y_coordinates[i] * x_coordinates[i] ** 2
+        one_segment.add_point(points[i])
         
         # compute 1-segment corset with new point
-        cost = One_Segment_Coreset(len(Q), Sx, Sxx, Sxxx, Sxxxx, Sy, Syy, Sxy, Sxxy)
+        cost = one_segment.cost(len(Q))
+
+        #cost = One_Segment_Coreset(len(Q), Sx, Sxx, Sxxx, Sxxxx, Sy, Syy, Sxy, Sxxy)
         
         if i == len(points)-1:
             D.append((cost, i-len(Q), i))
@@ -46,32 +34,22 @@ def balanced_partition(points, Sigma):
         if cost > Sigma:
             # then we take the previous cost - without the new point
             T = Q
-            T.pop()            
-            Sx -= x_coordinates[i]
-            Sxx -= x_coordinates[i] ** 2
-            Sxxx -= x_coordinates[i] ** 3
-            Sxxxx -= x_coordinates[i] ** 4
-            Sy -= y_coordinates[i]
-            Syy -= y_coordinates[i] ** 2
-            Sxy -= x_coordinates[i] * y_coordinates[i]
-            Sxxy -= y_coordinates[i] * x_coordinates[i] ** 2
-            
+            T.pop()       
+            one_segment.remove_point(points[i])     
+
             # compute 1-segment corset without the new point
-            cost = One_Segment_Coreset(len(T) ,Sx, Sxx, Sxxx, Sxxxx, Sy, Syy, Sxy, Sxxy)
-            
+            #cost = One_Segment_Coreset(len(T) ,Sx, Sxx, Sxxx, Sxxxx, Sy, Syy, Sxy, Sxxy)
+            cost = one_segment.cost(len(T))
+
             D.append((cost, i-len(T), i-1))
             
             
             # reset values for 1-segment corset and start compute from ith point
             Q = [points[i]]
-            Sx = x_coordinates[i]
-            Sxx = x_coordinates[i] ** 2
-            Sxxx = x_coordinates[i] ** 3
-            Sxxxx = x_coordinates[i] ** 4
-            Sy = y_coordinates[i]
-            Syy = y_coordinates[i] ** 2
-            Sxy = x_coordinates[i] * y_coordinates[i]
-            Sxxy = y_coordinates[i] * x_coordinates[i] ** 2
+
+            last_x = x_coordinates[i]
+            last_y = y_coordinates[i]
+            one_segment = One_Segment(last_x, last_x ** 2, last_x ** 3, last_x ** 4, last_y, last_y ** 2, last_x * last_y, last_y * last_x ** 2)
     return D
 
 
