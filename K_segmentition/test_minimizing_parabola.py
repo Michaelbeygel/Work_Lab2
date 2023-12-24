@@ -49,17 +49,18 @@ def test_minimizing_parabola():
         for e in range(len(exmples)):
             print(f'start computing exmple: {e+1}')
             #  set array of x coordinates and array of y coordinates
-            x_coordinates = [point[0] for point in exmples[e]]
-            y_coordinates = [point[1] for point in exmples[e]]
+            points = exmples[e]
+            x_coordinates = [point[0] for point in points]
+            y_coordinates = [point[1] for point in points]
             
-            n = len(x_coordinates)
+            n = len(points)
 
             # generate the D, P arrays with makeD function
-            D,P = makeD(x_coordinates, y_coordinates)
+            D,P = makeD(points)
             
             # finding the optimal k and return the parabolas, residuals, shortestPath for that k
                 
-            parabolas, residuals, shortestPath, k = find_optimal_k(P, D)
+            parabolas, residuals, shortestPath, k = find_optimal_k(D, P)
             
             for i in range(k):
                 print(f"{i+1} Best-fit parabola: \n {parabolas[i]} \n")

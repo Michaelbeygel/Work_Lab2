@@ -14,7 +14,7 @@ import numpy as np
 # time: O(n)<  //    usualy is much less
 # memory: O(n)< //   "                 "
 #
-def find_optimal_k(P, D):
+def find_optimal_k(D, P):
     n = len(D)
     
     # array f the residuals for each k
@@ -23,7 +23,7 @@ def find_optimal_k(P, D):
     # computing residuals for k = 1
     k = 1
     #  parameters that storing for k = 1
-    first_parabolas, first_residuals, first_shortestPath = best_k_parabols(P, D, k)
+    first_parabolas, first_residuals, first_shortestPath = best_k_parabols(D, P, k)
     #  parameters that storing for the last k that was running
     last_parabolas, last_residuals, last_shortestPath = first_parabolas, first_residuals, first_shortestPath
     loss = np.sum(first_residuals)
@@ -39,7 +39,7 @@ def find_optimal_k(P, D):
     # in this example, 10% of the mean difference.
     for k in range(2, max_clusters+1):
         parabolas, residuals, shortestPath = last_parabolas, last_residuals, last_shortestPath
-        last_parabolas, last_residuals, last_shortestPath = best_k_parabols(P, D, k)
+        last_parabolas, last_residuals, last_shortestPath = best_k_parabols(D, P, k)
         loss = np.sum(last_residuals)
         distortions.append(loss)
         # Check for the elbow point

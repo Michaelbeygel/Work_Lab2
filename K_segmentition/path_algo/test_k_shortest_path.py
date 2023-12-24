@@ -1,8 +1,9 @@
 import random
 import time
 import matplotlib.pyplot as plt
-from k_shortest_path import shortest_k_path, makeD
+from k_shortest_path import shortest_k_path
 from memory_profiler import memory_usage
+from makeD import makeD
 
 
 
@@ -19,8 +20,8 @@ def test_shortest_k_path():
         # Test the code with different input sizes and values of k
         for n in range(10 , 100, 10):  # Test with different input sizes from 10 to 100
             k = 3 #random.randint(2, n)
-            v = generate_synthetic_example(n)  
-            D = makeD(v)  
+            points = generate_synthetic_example(n)  
+            D = makeD(points)  
 
             # Measure execution time
             start_time = time.time()
@@ -71,8 +72,8 @@ def test_shortest_k_path():
 
 # unction to generate synthetic examples of vectors represent nodes
 def generate_synthetic_example(n):
-    v = [random.randint(-999, 999) for _ in range(n)]
-    return v
+    points = [(i,random.randint(-999, 999)) for i in range(n)]
+    return points
 
 def defult_time_execution(n, k):
     x = 0

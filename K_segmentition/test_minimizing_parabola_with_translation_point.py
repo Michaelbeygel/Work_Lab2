@@ -3,10 +3,9 @@ from matplotlib import pyplot as plt
 import numpy as np
 from numpy import RankWarning
 from rectangle_problem.min_points import get_rectangle_coordinates, min_parabols
-from path_algo.k_shortest_path_with_translation_point import k_shortest_path_with_translation_point
+from path_algo.k_shortest_path import k_shortest_path_with_translation_point
 from path_algo.makeD_k import  makeD_k
-from path_algo.makeD_asymetric import  makeD_asymetric
-from path_algo.makeD import makeD
+from path_algo.makeD import makeD, makeD_asymetric
 from rectangle_problem.point_in_rectangle import distances, rectangle_from_distances
 from minimizing_parabola import best_k_parabols
 from find_optimal_k import find_optimal_k
@@ -54,14 +53,16 @@ def test_minimizing_parabola_with_translation_point():
             print(f"start hole: {start_hole} \n end hole: {end_hole}")
             print(start_hole_angle)
             print(end_hole_angle)
-                        
-            n = len(x_coordinates_before_transletion)
+            
+            n = len(x_coordinates_before_transletion)         
+            points = [(x_coordinates_before_transletion[t], y_coordinates_before_transletion[t]) for t in range(n)]
+            
             
             print(f"number of points: {n}")
             
             k = 4
             # make asymetric distances metrix
-            asymetricD = makeD_asymetric(x_coordinates_before_transletion, y_coordinates_before_transletion)
+            asymetricD = makeD_asymetric(points)
             # make D_k - [i][j] (i<j) cell is optimal way to get from node i to j with k steps
             D_k = makeD_k(asymetricD, k-1)
             # compute the transletion point
@@ -76,11 +77,13 @@ def test_minimizing_parabola_with_translation_point():
             #x_coordinates = x_coordinates_before_transletion[transletion+1:n]
             y_coordinates = y_coordinates_before_transletion[transletion+1:n]
             y_coordinates.extend(y_coordinates_before_transletion[0:transletion+1])
+
+            points = [(x_coordinates[i], y_coordinates[i]) for i in range(len(y_coordinates))]
             # generate the D, P arrays with makeD function on the new array
-            D,P = makeD(x_coordinates, y_coordinates)
+            D,P = makeD(points)
             
             # finding the optimal k and return the parabolas, residuals, shortestPath for that k
-            parabolas, residuals, shortestPath = best_k_parabols(P, D, k)
+            parabolas, residuals, shortestPath = best_k_parabols(D, P, k)
         
             
             for i in range(k):

@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def makeD_k(D_1, k):
     n = len(D_1)
     D_k = D_1
